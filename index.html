@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Er Arvind Ai </title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: url(arvind.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #0078ff;
+      font-size: 1.5rem;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      transition: border-color 0.3s;
+    }
+
+    textarea:focus {
+      border-color: #0078ff;
+      outline: none;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      background: #0078ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #005fcc;
+    }
+
+    pre {
+      background: #f8f9fa;
+      padding: 12px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin-top: 15px;
+      font-size: 15px;
+      line-height: 1.4;
+      border: 1px solid #eee;
+      min-height: 80px;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      textarea {
+        height: 100px;
+        font-size: 15px;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 10px;
+      }
+
+      pre {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        padding: 15px;
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🤖 Er Arvind Ai</h2>
+    <textarea id="prompt" placeholder="Ask with Er Arvind Ai something..."></textarea>
+    <button id="sendBtn">Send</button>
+    <pre id="response">Response will appear here...</pre>
+  </div>
+
+  <script>
+    const API_KEY = "AIzaSyDuARPESBTOq_NupqW9OXZwHNeZv7d1mPA";
+
+    document.getElementById("sendBtn").addEventListener("click", async () => {
+      const prompt = document.getElementById("prompt").value.trim();
+      const responseBox = document.getElementById("response");
+
+      if (!prompt) {
+        responseBox.textContent = "⚠️ Please enter a question first.";
+        return;
+      }
+
+      responseBox.textContent = "🚀 Thinking...";
+
+      try {
+        const res = await fetch(
+          "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": API_KEY,
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [{ text: prompt }],
+                },
+              ],
+            }),
+          }
+        );
+
+        const data = await res.json();
+        const output =
+          data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+          "⚠️ No response from Gemini.";
+        responseBox.textContent = output;
+      } catch (error) {
+        console.error(error);
+        responseBox.textContent = "❌ Error: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
